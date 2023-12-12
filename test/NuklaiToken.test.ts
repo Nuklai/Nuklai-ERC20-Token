@@ -1,19 +1,19 @@
 import { assert, expect } from "chai";
 import { BigNumber } from "ethers";
 import { ethers, deployments } from "hardhat";
-import { AllianceBlockToken } from "../typechain-types";
+import { NuklaiToken } from "../typechain-types";
 import { TOKEN_NAME, TOKEN_SYMBOL, MAX_TOTAL_SUPPLY } from "../utils/constants";
 
-describe("AllianceBlockToken", function () {
+describe("NuklaiToken", function () {
   let deployer: any, admin: any, recipient: any, anotherAccount: any;
-  let token: AllianceBlockToken;
+  let token: NuklaiToken;
 
   before(async () => {
     [deployer, admin, recipient, anotherAccount] = await ethers.getSigners();
   });
 
   beforeEach(async function () {
-    const contractName = "AllianceBlockToken";
+    const contractName = "NuklaiToken";
     await deployments.fixture([contractName]);
     const deployedContract = await deployments.get(contractName); // Token is available because the fixture was executed
     token = await ethers.getContractAt(contractName, deployedContract.address);
@@ -51,12 +51,12 @@ describe("AllianceBlockToken", function () {
   it("can't transfer to contract address", async () => {
     const tokens = BigNumber.from(100);
     await token.mint(admin.address, tokens);
-    await expect(token.transfer(token.address, tokens)).to.be.revertedWith("NXRA: Token transfer to this contract");
+    await expect(token.transfer(token.address, tokens)).to.be.revertedWith("NAI: Token transfer to this contract");
   });
 
   it("can't mint more than cap", async () => {
-    const amountToMint = BigNumber.from(ethers.utils.parseEther('850000001'));
-    await expect(token.mint(admin.address, amountToMint)).to.be.revertedWith("NXRA: cap exceeded");
+    const amountToMint = BigNumber.from(ethers.utils.parseEther('2000000001'));
+    await expect(token.mint(admin.address, amountToMint)).to.be.revertedWith("NAI: cap exceeded");
   });
 
   it("increments recipient balance", async () => {
@@ -138,7 +138,7 @@ describe("AllianceBlockToken", function () {
 
     it("should fail to create snapshot when paused", async () => {
       await token.pause();
-      await expect(token.snapshot()).to.be.revertedWith("NXRA: Contract paused");
+      await expect(token.snapshot()).to.be.revertedWith("NAI: Contract paused");
     });
 
     it("should obtain snapshot values", async () => {
@@ -167,7 +167,7 @@ describe("AllianceBlockToken", function () {
     });
 
     it("shouldn't create snapshot if not admin", async () => {
-      await expect(token.connect(deployer).snapshot()).to.be.revertedWith("NXRA: Snapshot invalid role");
+      await expect(token.connect(deployer).snapshot()).to.be.revertedWith("NAI: Snapshot invalid role");
     });
   });
 
@@ -209,19 +209,19 @@ describe("AllianceBlockToken", function () {
       const recipients: string[] = [admin.address];
       const role = await token.MINTER_ROLE();
       await token.revokeRole(role, admin.address);
-      await expect(token.batchMint(recipients, tokens)).to.be.revertedWith("NXRA: Batch mint invalid role");
+      await expect(token.batchMint(recipients, tokens)).to.be.revertedWith("NAI: Batch mint invalid role");
     });
 
     it("Can't batchMint with diferent length arrays", async () => {
       const tokens: BigNumber[] = [BigNumber.from(1)];
       const recipients: string[] = [deployer.address, admin.address];
-      await expect(token.batchMint(recipients, tokens)).to.be.revertedWith("NXRA: Batch mint not same legth");
+      await expect(token.batchMint(recipients, tokens)).to.be.revertedWith("NAI: Batch mint not same legth");
     });
 
     it("Can't batchMint to contract address", async () => {
       const tokens: BigNumber[] = [BigNumber.from(1)];
       const recipients: string[] = [token.address];
-      await expect(token.batchMint(recipients, tokens)).to.be.revertedWith("NXRA: Token transfer to this contract");
+      await expect(token.batchMint(recipients, tokens)).to.be.revertedWith("NAI: Token transfer to this contract");
     });
   });
 });

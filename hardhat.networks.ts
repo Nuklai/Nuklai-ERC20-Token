@@ -48,7 +48,7 @@ if (accounts) {
     tags: ["staging"],
   };
 
-  networks.avalache = {
+  networks.avalanche = {
     live: true,
     chainId: 43114,
     url: "https://api.avax.network/ext/bc/C/rpc",

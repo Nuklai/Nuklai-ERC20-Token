@@ -1,6 +1,6 @@
-# AllianceBlock Smart Contracts
+# Nuklai Token
 
-## NXRA token contract
+## NAI token contract
 An upgradable ERC20 contract owned by a multi-signature wallet. Also, it allows creating snapshots, pausing it, support (EIP-2612)[https://eips.ethereum.org/EIPS/eip-2612] and batch minting.
 
 ## Env variables
@@ -45,5 +45,3 @@ If the network where you are deploying uses Blockscout, use Sourcify instead.
 ```bash
 yarn hardhat --network <NetworkName> sourcify
 ```
-
-

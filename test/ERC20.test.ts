@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
-import { AllianceBlockToken, TestProxy } from "../typechain-types";
+import { NuklaiToken, TestProxy } from "../typechain-types";
 import { MAX_TOTAL_SUPPLY } from "../utils/constants";
 
 const ZERO_ADDRESS = ethers.constants.AddressZero;
@@ -14,13 +14,13 @@ describe("ERC20", () => {
   const initialSupply = BigNumber.from(100);
   const maxTotalSupply = MAX_TOTAL_SUPPLY;
   let Token: any, TestProxy: any;
-  let token: AllianceBlockToken;
+  let token: NuklaiToken;
   let testProxy: TestProxy;
-  let tokenImplementation: AllianceBlockToken;
+  let tokenImplementation: NuklaiToken;
 
   before(async () => {
     [initialHolder, recipient, anotherAccount, proxyAdmin] = await ethers.getSigners();
-    Token = await ethers.getContractFactory("AllianceBlockToken");
+    Token = await ethers.getContractFactory("NuklaiToken");
     TestProxy = await ethers.getContractFactory("TestProxy");
     tokenImplementation = await Token.deploy();
   });
@@ -28,7 +28,7 @@ describe("ERC20", () => {
   beforeEach(async () => {
     const populatedTx = await tokenImplementation.populateTransaction.init(name, symbol, initialHolder.address, maxTotalSupply);
     testProxy = await TestProxy.deploy(tokenImplementation.address, proxyAdmin.address, populatedTx.data);
-    token = await ethers.getContractAt("AllianceBlockToken", testProxy.address) as AllianceBlockToken;
+    token = await ethers.getContractAt("NuklaiToken", testProxy.address) as NuklaiToken;
     await token.mint(initialHolder.address, initialSupply);
   });
 

@@ -5,7 +5,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/presets/ERC20PresetMinte
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20SnapshotUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-ERC20PermitUpgradeable.sol";
 
-contract AllianceBlockToken is ERC20PresetMinterPauserUpgradeable, ERC20SnapshotUpgradeable, ERC20PermitUpgradeable {
+contract NuklaiToken is ERC20PresetMinterPauserUpgradeable, ERC20SnapshotUpgradeable, ERC20PermitUpgradeable {
     uint256 private constant VERSION = 1;
 
     // The cap or max total supply of the token.
@@ -20,16 +20,16 @@ contract AllianceBlockToken is ERC20PresetMinterPauserUpgradeable, ERC20Snapshot
         __ERC20Snapshot_init_unchained();
         __ERC20Permit_init(name);
         __Pausable_init_unchained();
-        __AllianceBlockToken_init_unchained(cap_);
+        __NuklaiToken_init_unchained(cap_);
         // We don't use __ERC20PresetMinterPauser_init_unchained to avoid giving permisions to _msgSender
-        require(admin != address(0), "NXRA: Admin can't be zero address");
+        require(admin != address(0), "NAI: Admin can't be zero address");
         _setupRole(DEFAULT_ADMIN_ROLE, admin);
         _setupRole(MINTER_ROLE, admin);
         _setupRole(PAUSER_ROLE, admin);
     }
 
-    function __AllianceBlockToken_init_unchained(uint256 cap_) internal onlyInitializing {
-        require(cap_ > 0, "NXRA: cap is 0");
+    function __NuklaiToken_init_unchained(uint256 cap_) internal onlyInitializing {
+        require(cap_ > 0, "NAI: cap is 0");
         _cap = cap_;
     }
 
@@ -41,7 +41,7 @@ contract AllianceBlockToken is ERC20PresetMinterPauserUpgradeable, ERC20Snapshot
         address to,
         uint256 amount
     ) internal virtual override(ERC20PresetMinterPauserUpgradeable, ERC20SnapshotUpgradeable, ERC20Upgradeable) {
-        require(to != address(this), "NXRA: Token transfer to this contract");
+        require(to != address(this), "NAI: Token transfer to this contract");
         super._beforeTokenTransfer(from, to, amount);
     }
 
@@ -61,8 +61,8 @@ contract AllianceBlockToken is ERC20PresetMinterPauserUpgradeable, ERC20Snapshot
      * set of accounts, for example using {AccessControl}, or it may be open to the public.
      */
     function snapshot() public returns (uint256) {
-        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "NXRA: Snapshot invalid role");
-        require(!paused(), "NXRA: Contract paused");
+        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "NAI: Snapshot invalid role");
+        require(!paused(), "NAI: Contract paused");
         return _snapshot();
     }
 
@@ -96,10 +96,10 @@ contract AllianceBlockToken is ERC20PresetMinterPauserUpgradeable, ERC20Snapshot
      * @dev Mints multiple values for multiple receivers
      */
     function batchMint(address[] calldata recipients, uint256[] calldata values) public returns (bool) {
-        require(hasRole(MINTER_ROLE, _msgSender()), "NXRA: Batch mint invalid role");
+        require(hasRole(MINTER_ROLE, _msgSender()), "NAI: Batch mint invalid role");
 
         uint256 recipientsLength = recipients.length;
-        require(recipientsLength == values.length, "NXRA: Batch mint not same legth");
+        require(recipientsLength == values.length, "NAI: Batch mint not same legth");
 
         uint256 totalValue = 0;
         for (uint256 i = 0; i < recipientsLength;) {
@@ -111,7 +111,7 @@ contract AllianceBlockToken is ERC20PresetMinterPauserUpgradeable, ERC20Snapshot
             unchecked { i++; }
         }
 
-        require(totalSupply() <= _cap, "NXRA: cap exceeded");
+        require(totalSupply() <= _cap, "NAI: cap exceeded");
         emit BatchMint(_msgSender(), recipientsLength, totalValue);
         return true;
     }
@@ -121,7 +121,7 @@ contract AllianceBlockToken is ERC20PresetMinterPauserUpgradeable, ERC20Snapshot
      * @dev Checks if cap is reached and calls normal _mint.
      */
     function _mint(address account, uint256 amount) internal override {
-        require(totalSupply() + amount <= _cap, "NXRA: cap exceeded");
+        require(totalSupply() + amount <= _cap, "NAI: cap exceeded");
         super._mint(account, amount);
     }
 

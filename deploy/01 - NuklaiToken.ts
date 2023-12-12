@@ -5,7 +5,7 @@ import { TOKEN_NAME, TOKEN_SYMBOL } from "../utils/constants";
 import { ethers } from "ethers";
 import { SALT, MAX_TOTAL_SUPPLY } from "../utils/constants";
 const version = "v2.0.0";
-const contractName = "AllianceBlockToken";
+const contractName = "NuklaiToken";
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   async function main() {
@@ -42,7 +42,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
       log: true,
     });
 
-    await verifyContract(network, deployResult, contractName);
+    //await verifyContract(network, deployResult, contractName);
 
     return true;
   }
